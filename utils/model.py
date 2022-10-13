@@ -43,83 +43,83 @@ def select_model(name):
         #resnet18
         resnet18 = models.resnet18()
         resnet18.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet18.fc = nn.Linear(512,10)
+        resnet18.fc = nn.Linear(512,100)
         return resnet18
 
     elif name == 'r50':
         #resnet50
         resnet50 = models.resnet50()
         resnet50.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet50.fc = nn.Linear(2048,10)
+        resnet50.fc = nn.Linear(2048,100)
         return resnet50
     
     elif name == 'r101':
         #resnet101
         resnet101 = models.resnet101()
         resnet101.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet101.fc = nn.Linear(2048,10)
+        resnet101.fc = nn.Linear(2048,100)
         return resnet101
 
     elif name == 'dnet121':
         #densenet121
         densenet121 = models.densenet121(weights=None)
         densenet121.features.conv0 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        densenet121.classifier = nn.Linear(1024,10)
+        densenet121.classifier = nn.Linear(1024,100)
         return densenet121
 
     elif name == 'vgg16':
         #vgg16
         vgg16 = models.vgg16()
-        vgg16.classifier[-1] = nn.Linear(4096, 10)
+        vgg16.classifier[-1] = nn.Linear(4096, 100)
         return vgg16
 
     elif name == 'vgg19':
         #vgg19
         vgg19 = models.vgg19()
-        vgg19.classifier[-1] = nn.Linear(4096, 10)
+        vgg19.classifier[-1] = nn.Linear(4096, 100)
         return vgg19
 
     elif name == 'alexnet':
         # alexnet 
         alexnet = models.AlexNet()
         alexnet.features[0] = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        alexnet.classifier[-1] = nn.Linear(4096,10)
+        alexnet.classifier[-1] = nn.Linear(4096,100)
         return alexnet
 
     elif name == 'mnetv2':
         # mobilenetv2
         mobilenetV2 = models.mobilenet_v2()
-        mobilenetV2.classifier[-1] = nn.Linear(1280,10)
+        mobilenetV2.classifier[-1] = nn.Linear(1280,100)
         return mobilenetV2
 
     elif name == 'mnetv3':
         #mobilenetv3
         mobilenetV3 = models.mobilenet_v3_large()
-        mobilenetV3.classifier[-1] = nn.Linear(1280,10)
+        mobilenetV3.classifier[-1] = nn.Linear(1280,100)
         return mobilenetV3
 
     elif name == 'cnext_tiny':
         #convnet_tiny
         convnext_tiny = models.convnext_tiny()
-        convnext_tiny.classifier[-1] = nn.Linear(768,10)           
+        convnext_tiny.classifier[-1] = nn.Linear(768,100)           
         return convnet_tiny
 
     elif name == 'cnext_base':
         #convnext_base
         convnext_base = models.convnext_base()
-        convnext_base.classifier[-1] = nn.Linear(1024,10)
+        convnext_base.classifier[-1] = nn.Linear(1024,100)
         return convnext_base
 
     elif name == 'swin_base':
         #swinbase 
         swin_base = models.swin_b()
-        swin_base.head = nn.Linear(1024,10)
+        swin_base.head = nn.Linear(1024,100)
         return swin_base
 
     elif name == 'effnetv2':
         #efficient net
         efficientnet_v2 = models.efficientnet_v2_s()
-        efficientnet_v2.classifier[-1] = nn.Linear(1280,10)
+        efficientnet_v2.classifier[-1] = nn.Linear(1280,100)
         return efficientnet_v2
 
     else:
