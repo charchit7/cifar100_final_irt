@@ -26,7 +26,7 @@ import os
 import random
 
 from utils.dataset import give_loader
-from utils.model import select_model
+from utils.model2 import select_model
 from utils.random import progress_bar
 
 #########################   
@@ -62,7 +62,7 @@ start_epoch = 0
 # data loader
 ##############
 
-train_loader, validation_loader, test_loader = give_loader(args.data_config)
+train_loader, validation_loader, test_loader = give_loader(args.data_config, temp=True)
 
 ############
 # MODEL
@@ -72,17 +72,29 @@ model.to(device)
 criterion = nn.CrossEntropyLoss()
 
 
+# optimizers
 if args.model == 'effnetv2' or args.model == 'mnetv2' or args.model == 'mnetv3':
     optimizer = torch.optim.RMSprop(model.parameters(), lr=args.lr,
         momentum=args.moment, weight_decay=args.weight_decay)
 
+elif args.model == 'cnext_base' or args.model == 'cnext_tiny':
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
-optimizer = optim.SGD(model.parameters(), lr=args.lr,
+elif args.model == 'swin_base':
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,weight_decay=args.weight_decay)
+
+else:
+    optimizer = optim.SGD(model.parameters(), lr=args.lr,
                       momentum=args.moment, weight_decay=args.weight_decay)
-                      
+
+
+# schedulers
 if args.model == 'r18' or 'r50' or 'r101':
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
                                                         milestones=[100, 150], last_epoch=0-1)
+elif args.model == 'dnet121':
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                        milestones=[150, 225])
 else:
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30)
 
@@ -116,7 +128,7 @@ def train(epoch):
 def test(epoch):
     global best_acc
     model.eval()
-    NUM_EPOCHS = 200
+    NUM_EPOCHS = args.epoch
     test_loss = 0
     correct = 0
     total = 0
