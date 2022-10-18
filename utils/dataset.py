@@ -68,10 +68,10 @@ def give_loader(args):
         ])
 
         train_and_valid = torchvision.datasets.CIFAR10(
-            root='./datac10', train=True, download=False, transform=transform_train)
+            root='./datac10', train=True, download=True, transform=transform_train)
 
         testset = torchvision.datasets.CIFAR10(
-            root='./datac10', train=False, download=False, transform=transform_test)
+            root='./datac10', train=False, download=True, transform=transform_test)
 
 
     elif args.data_config == "cifar100":
@@ -91,7 +91,7 @@ def give_loader(args):
             root='./datac100', train=True, download=True, transform=transform_train)
 
         testset = torchvision.datasets.CIFAR100(
-            root='./datac100', train=False, download=False, transform=transform_test)
+            root='./datac100', train=False, download=True, transform=transform_test)
 
 
     indices = list(range(len(train_and_valid))) # indices of the dataset
