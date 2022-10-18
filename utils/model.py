@@ -26,6 +26,7 @@ import os
 import random
 ##############################################################################################################
 
+
 torch.manual_seed(42 + 0)
 np.random.seed(42 + 0)
 random.seed(42 + 0)
@@ -34,92 +35,98 @@ random.seed(42 + 0)
 total_models = ['effnetv2', 'swin_base', 'cnext_base', 'cnext_tiny', 'mnetv3', 'mnetv2', 'alexnet', 'vgg19', 'vgg16', 'dnet121', 'r101', 'r50', 'r18']
 
 
-def select_model(name):
+def select_model(args):
     '''
     this function returns the models specified.
     '''
-    
-    if name == 'r18':    
+    if args.data_config == "cifar10":
+        classes = 10
+    elif args.data_config == "cifar100":
+        classes = 100
+    else:
+        print('enter correct cofig')
+
+    if args.model == 'r18':    
         #resnet18
         resnet18 = models.resnet18()
-        resnet18.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet18.fc = nn.Linear(512,100)
+        # resnet18.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
+        resnet18.fc = nn.Linear(512,classes)
         return resnet18
 
-    elif name == 'r50':
+    elif args.model == 'r50':
         #resnet50
         resnet50 = models.resnet50()
-        resnet50.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet50.fc = nn.Linear(2048,100)
+        # resnet50.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
+        resnet50.fc = nn.Linear(2048,classes)
         return resnet50
     
-    elif name == 'r101':
+    elif args.model == 'r101':
         #resnet101
         resnet101 = models.resnet101()
-        resnet101.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        resnet101.fc = nn.Linear(2048,100)
+        # resnet101.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
+        resnet101.fc = nn.Linear(2048,classes)
         return resnet101
 
-    elif name == 'dnet121':
+    elif args.model == 'dnet121':
         #densenet121
         densenet121 = models.densenet121(weights=None)
-        densenet121.features.conv0 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        densenet121.classifier = nn.Linear(1024,100)
+        # densenet121.features.conv0 = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
+        densenet121.classifier = nn.Linear(1024,classes)
         return densenet121
 
-    elif name == 'vgg16':
+    elif args.model == 'vgg16':
         #vgg16
         vgg16 = models.vgg16()
-        vgg16.classifier[-1] = nn.Linear(4096, 100)
+        vgg16.classifier[-1] = nn.Linear(4096, classes)
         return vgg16
 
-    elif name == 'vgg19':
+    elif args.model == 'vgg19':
         #vgg19
         vgg19 = models.vgg19()
-        vgg19.classifier[-1] = nn.Linear(4096, 100)
+        vgg19.classifier[-1] = nn.Linear(4096, classes)
         return vgg19
 
-    elif name == 'alexnet':
+    elif args.model == 'alexnet':
         # alexnet 
         alexnet = models.AlexNet()
-        alexnet.features[0] = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
-        alexnet.classifier[-1] = nn.Linear(4096,100)
+        # alexnet.features[0] = nn.Conv2d(3,64,kernel_size=(3,3),padding=(1,1), bias=False)
+        alexnet.classifier[-1] = nn.Linear(4096,classes)
         return alexnet
 
-    elif name == 'mnetv2':
+    elif args.model == 'mnetv2':
         # mobilenetv2
         mobilenetV2 = models.mobilenet_v2()
-        mobilenetV2.classifier[-1] = nn.Linear(1280,100)
+        mobilenetV2.classifier[-1] = nn.Linear(1280,classes)
         return mobilenetV2
 
-    elif name == 'mnetv3':
+    elif args.model == 'mnetv3':
         #mobilenetv3
         mobilenetV3 = models.mobilenet_v3_large()
-        mobilenetV3.classifier[-1] = nn.Linear(1280,100)
+        mobilenetV3.classifier[-1] = nn.Linear(1280,classes)
         return mobilenetV3
 
-    elif name == 'cnext_tiny':
+    elif args.model == 'cnext_tiny':
         #convnet_tiny
         convnext_tiny = models.convnext_tiny()
-        convnext_tiny.classifier[-1] = nn.Linear(768,100)           
-        return convnet_tiny
+        convnext_tiny.classifier[-1] = nn.Linear(768,classes)           
+        return convnext_tiny
 
-    elif name == 'cnext_base':
+    elif args.model == 'cnext_base':
         #convnext_base
         convnext_base = models.convnext_base()
-        convnext_base.classifier[-1] = nn.Linear(1024,100)
+        convnext_base.classifier[-1] = nn.Linear(1024,classes)
         return convnext_base
 
-    elif name == 'swin_base':
+    elif args.model == 'swin_base':
         #swinbase 
-        swin_base = models.swin_b()
-        swin_base.head = nn.Linear(1024,100)
+        swin_base = models.swin_b(weights=torchvision.models.Swin_B_Weights.IMAGENET1K_V1)
+        swin_base.head = nn.Linear(1024,classes)
         return swin_base
 
-    elif name == 'effnetv2':
+    elif args.model == 'effnetv2':
         #efficient net
         efficientnet_v2 = models.efficientnet_v2_s()
-        efficientnet_v2.classifier[-1] = nn.Linear(1280,100)
+        efficientnet_v2.classifier[-1] = nn.Linear(1280,classes)
         return efficientnet_v2
 
     else:
