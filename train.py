@@ -26,7 +26,7 @@ import os
 import random
 
 from utils.dataset import give_loader
-from utils.model2 import select_model
+from utils.model import select_model
 from utils.random import progress_bar
 
 #########################   
@@ -62,15 +62,14 @@ start_epoch = 0
 # data loader
 ##############
 
-train_loader, validation_loader, test_loader = give_loader(args.data_config, temp=True)
+train_loader, validation_loader, test_loader = give_loader(args)
 
 ############
 # MODEL
 ###########
-model = select_model(args.model)
+model = select_model(args)
 model.to(device)
 criterion = nn.CrossEntropyLoss()
-
 
 # optimizers
 if args.model == 'effnetv2' or args.model == 'mnetv2' or args.model == 'mnetv3':
@@ -92,11 +91,10 @@ else:
 if args.model == 'r18' or 'r50' or 'r101':
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
                                                         milestones=[100, 150], last_epoch=0-1)
-elif args.model == 'dnet121':
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                        milestones=[150, 225])
 else:
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30)
+
+
 
 ############
 # TRAIN function
@@ -156,13 +154,15 @@ def test(epoch):
             'acc': acc,
             'epoch': epoch,
         }
-        if not os.path.isdir('checkpoint_'+str(args.data_config)):
-            os.mkdir('checkpoint_'+str(args.data_config))
-        torch.save(state, './checkpoint_'+str(args.data_config)+'/'+args.model+'ckpt.pth')
+        if not os.path.isdir('checkpoint_'+str(args.data_config)+'_final'):
+            os.mkdir('checkpoint_'+str(args.data_config)+'_final')
+        torch.save(state, './checkpoint_'+str(args.data_config)+'_final/'+args.model+'ckpt.pth')
         best_acc = acc
     
-    if not os.path.isdir('checkpoint_for_'+str(args.model)+'_'+str(args.data_config)):
-            os.mkdir('checkpoint_for_'+str(args.model)+'_'+str(args.data_config))
+    if not os.path.isdir('checkpoint_for_'+str(args.model)+'_'+str(args.data_config)+'_final'):
+            os.mkdir('checkpoint_for_'+str(args.model)+'_'+str(args.data_config)+'_final')
+    
+    # saving model at various checkpoints for our usecase
     if epoch == math.floor((1/100)*NUM_EPOCHS) or epoch == math.floor((10/100)*NUM_EPOCHS) or epoch == math.floor((30/100)*NUM_EPOCHS) or epoch == math.floor((50/100)*NUM_EPOCHS) or epoch == math.floor((70/100)*NUM_EPOCHS):
         print('saving model at:', epoch)
         state = {
@@ -170,7 +170,7 @@ def test(epoch):
             'acc': acc,
             'epoch': epoch,
         }
-        pth = 'checkpoint_for_'+str(args.model)+'_'+str(args.data_config)+'/'+str(args.model)+'_'+str(epoch)
+        pth = 'checkpoint_for_'+str(args.model)+'_'+str(args.data_config)+'_final/'+str(args.model)+'_'+str(epoch)
         torch.save(state,pth)
 
 
