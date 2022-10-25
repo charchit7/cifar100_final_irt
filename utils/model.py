@@ -109,13 +109,13 @@ def select_model(args):
     elif args.model == 'cnext_tiny':
         #convnet_tiny
         convnext_tiny = timm.create_model('convnext_tiny', pretrained=True)
-        convnext_tiny.head.fc = nn.Linear(768,10)       
+        convnext_tiny.head.fc = nn.Linear(768,classes)       
         return convnext_tiny
 
     elif args.model == 'cnext_base':
         #convnext_base
         convnext = timm.create_model('convnext_base', pretrained=True)
-        convnext.head.fc = nn.Linear(1024,10)
+        convnext.head.fc = nn.Linear(1024,classes)
         return convnext
 
     elif args.model == 'swin_base':
