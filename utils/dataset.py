@@ -68,30 +68,30 @@ def give_loader(args):
         ])
 
         train_and_valid = torchvision.datasets.CIFAR10(
-            root='./datac10', train=True, download=True, transform=transform_train)
+            root='./datac10', train=True, download=False, transform=transform_train)
 
         testset = torchvision.datasets.CIFAR10(
-            root='./datac10', train=False, download=True, transform=transform_test)
+            root='./datac10', train=False, download=False, transform=transform_test)
 
 
     elif args.data_config == "cifar100":
         transform_train = transforms.Compose([
             transforms.RandomResizedCrop((224, 224), scale=(0.05, 1.0)),
             transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465),((0.2470, 0.2435, 0.2616))),
+            transforms.Normalize((0.4914, 0.4822, 0.4465),(0.2470, 0.2435, 0.2616)),
         ])
 
         transform_test = transforms.Compose([
             transforms.RandomResizedCrop((224, 224), scale=(0.05, 1.0)),
             transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465),([0.2470, 0.2435, 0.2616])),
+            transforms.Normalize((0.4914, 0.4822, 0.4465),(0.2470, 0.2435, 0.2616)),
         ])
 
         train_and_valid = torchvision.datasets.CIFAR100(
             root='./datac100', train=True, download=True, transform=transform_train)
 
         testset = torchvision.datasets.CIFAR100(
-            root='./datac100', train=False, download=True, transform=transform_test)
+            root='./datac100', train=False, download=False, transform=transform_test)
 
 
     indices = list(range(len(train_and_valid))) # indices of the dataset
