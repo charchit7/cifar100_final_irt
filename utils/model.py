@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import models
 
+import timm
 import numpy as np
 import pandas as pd
 import torch
@@ -107,19 +108,19 @@ def select_model(args):
 
     elif args.model == 'cnext_tiny':
         #convnet_tiny
-        convnext_tiny = models.convnext_tiny()
-        convnext_tiny.classifier[-1] = nn.Linear(768,classes)           
+        convnext_tiny = timm.create_model('convnext_tiny', pretrained=True)
+        convnext_tiny.head.fc = nn.Linear(768,10)       
         return convnext_tiny
 
     elif args.model == 'cnext_base':
         #convnext_base
-        convnext_base = models.convnext_base()
-        convnext_base.classifier[-1] = nn.Linear(1024,classes)
-        return convnext_base
+        convnext = timm.create_model('convnext_base', pretrained=True)
+        convnext.head.fc = nn.Linear(1024,10)
+        return convnext
 
     elif args.model == 'swin_base':
         #swinbase 
-        swin_base = models.swin_b(weights=torchvision.models.Swin_B_Weights.IMAGENET1K_V1)
+        swin_base = timm.create_model('swin_base_patch4_window7_224', pretrained=True)
         swin_base.head = nn.Linear(1024,classes)
         return swin_base
 
