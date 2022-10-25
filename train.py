@@ -54,7 +54,7 @@ args = parser.parse_args()
 ############
 # Settings
 ############
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 'cuda' if torch.cuda.is_available() else 'cpu' 
 best_acc = 0
 start_epoch = 0
 
